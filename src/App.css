@@ -5,3 +5,10 @@
   align-items: center;
   height: 100vh;
 }
+
+.homeButton {
+  display: block;
+  position: absolute;
+  top: 5%;
+  right: 5%;
+}

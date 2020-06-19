@@ -9,9 +9,18 @@ const formSchema = yup.object().shape({
     size: yup
     .string()
     .oneOf(['small', 'medium', 'large', 'x-Large'], 'Please select a size'),
+    instructions: yup
+    .string()
 });
 
-const initialFormValues = {name: '', size: '', pepperoni: false, cheese: false, mushrooms: false, olives: false, instructions: ''}
+const initialFormValues = {
+    name: '', 
+    size: '', 
+    toppings: {
+        pepperoni: false, cheese: false, mushrooms: false, olives: false
+    },
+    instructions: ''
+};
 
 export default function Form() {
 
@@ -62,10 +71,9 @@ export default function Form() {
             setFormState({
                 name: '',
                 size: '',
-                pepperoni: '',
-                cheese: '',
-                mushrooms: '',
-                olives: '',
+                toppings: {
+                    pepperoni: '', cheese: '', mushrooms: '', olives: ''
+                },
                 instructions: ''
             });
         })
@@ -84,6 +92,17 @@ export default function Form() {
         };
         validateChange(event);
         setFormState(newFormData)
+    };
+
+    const onCheckboxChange = (event) => {
+        const { name, checked } = event.target
+        setFormState({
+            ...formState, 
+            toppings: {
+                ...formState.toppings, 
+                [name]: checked
+            }
+        });
     };
 
     return (
@@ -113,16 +132,16 @@ export default function Form() {
                 <label htmlFor='toppings'>
                     <h3>Toppings:</h3>
                     Pepperoni
-                    <input type='checkbox' name='pepperoni' checked={formState.pepperoni} onChange={inputChange}/>
+                    <input type='checkbox' name='pepperoni' checked={formState.pepperoni} onChange={onCheckboxChange}/>
                     <br/>
                     Cheese
-                    <input type='checkbox' name='cheese' checked={formState.cheese} onChange={inputChange}/>
+                    <input type='checkbox' name='cheese' checked={formState.cheese} onChange={onCheckboxChange}/>
                     <br/>
                     Mushrooms
-                    <input type='checkbox' name='mushrooms' checked={formState.mushrooms} onChange={inputChange}/>
+                    <input type='checkbox' name='mushrooms' checked={formState.mushrooms} onChange={onCheckboxChange}/>
                     <br/>
                     Olives
-                    <input type='checkbox' name='olives' checked={formState.olives} onChange={inputChange}/>
+                    <input type='checkbox' name='olives' checked={formState.olives} onChange={onCheckboxChange}/>
                 </label>
             </div>
             <br/>
