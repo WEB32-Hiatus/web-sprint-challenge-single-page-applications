@@ -5,7 +5,7 @@ export default function Home() {
 
     return (
         <div className='Home'>
-            <Link to = '/form'>
+            <Link to = '/pizza'>
                 <button>Place Order</button>
             </Link>
         </div>
