@@ -26,7 +26,7 @@ export default function Form() {
 
     const [formState, setFormState] = useState(initialFormValues)
 
-    const [error, setError] = useState({
+    const [errors, setErrors] = useState({
         name: '', 
         size: ''
     });
@@ -47,15 +47,15 @@ export default function Form() {
         .reach(formSchema, event.target.name)
         .validate(event.target.value)
         .then( (valid) => {
-            setError({
-                ...error, 
+            setErrors({
+                ...errors, 
                 [event.target.name]: ''
             });
         })
         .catch( (err) => {
-            setError({
-                ...error,
-                [event.target.name]: err.error
+            setErrors({
+                ...errors,
+                [event.target.name]: err.errors[0]
             });
         });
     };
@@ -63,7 +63,7 @@ export default function Form() {
     const formSubmit = (event) => {
         event.preventDefault();
         axios
-        .post('https://reqres.in/', formState)
+        .post('https://reqres.in/api/users', formState)
         .then( (response) => {
             setOrders([...orders, response.data]);
             console.log('success', orders);
@@ -72,7 +72,7 @@ export default function Form() {
                 name: '',
                 size: '',
                 toppings: {
-                    pepperoni: '', cheese: '', mushrooms: '', olives: ''
+                    pepperoni: false, cheese: false, mushrooms: false, olives: false
                 },
                 instructions: ''
             });
@@ -111,7 +111,7 @@ export default function Form() {
                 <label htmlFor='name'>
                     <h3>Full Name</h3>
                     <input type='text' name='name' value={formState.name} onChange={inputChange}/>
-                    {error.name.length > 0 ? <p className='error'>{error.name}</p> : null}
+                    {errors.name.length > 0 ? <p className='error'>{errors.name}</p> : null}
                 </label>
             </div>
             <br/>
