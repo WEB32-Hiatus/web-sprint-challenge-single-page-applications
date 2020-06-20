@@ -5,7 +5,8 @@ import axios from 'axios';
 const formSchema = yup.object().shape({
     name: yup
     .string()
-    .required('Name is a required field'),
+    .min(2, 'Name must be at least 2 characters')
+    .required(),
     size: yup
     .string()
     .oneOf(['small', 'medium', 'large', 'x-Large'], 'Please select a size'),
@@ -55,7 +56,7 @@ export default function Form() {
         .catch( (err) => {
             setErrors({
                 ...errors,
-                [event.target.name]: err.errors[0]
+                [event.target.name]: err.errors
             });
         });
     };
@@ -68,14 +69,7 @@ export default function Form() {
             setOrders([...orders, response.data]);
             console.log('success', orders);
 
-            setFormState({
-                name: '',
-                size: '',
-                toppings: {
-                    pepperoni: false, cheese: false, mushrooms: false, olives: false
-                },
-                instructions: ''
-            });
+            setFormState(initialFormValues);
         })
         .catch( (err) => {
             console.log(err.response);
@@ -125,6 +119,7 @@ export default function Form() {
                     <option value='large'>Large</option>
                     <option value='x-Large'>X-Large</option>
                     </select>
+                    {errors.size ? <p className='error'>{errors.size}</p> : null}
                 </label>
             </div>
             <br/>
@@ -152,7 +147,7 @@ export default function Form() {
                 </label>
             </div>
             <br/>
-            <button disabled={buttonDisabled}>Submit</button>
+            <button disabled={buttonDisabled} name='submit'>Submit</button>
             <pre>{JSON.stringify(orders, null, 2)}</pre>
         </form>
     );
